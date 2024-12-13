@@ -40,7 +40,7 @@
             cursor: not-allowed;
         }
 
-        #transcription {
+        #transcription, #audioPlayerContainer {
             margin-top: 20px;
             font-size: 18px;
         }
@@ -52,6 +52,8 @@
         <button id="startRecording">开始录音</button>
         <button id="stopRecording" disabled>停止录音</button>
         <h2>录音内容:</h2>
+        <div id="audioPlayerContainer"></div>
+        <h2>识别的文字:</h2>
         <p id="transcription"></p>
     </div>
 
@@ -59,6 +61,7 @@
         const startRecordingButton = document.getElementById('startRecording');
         const stopRecordingButton = document.getElementById('stopRecording');
         const transcriptionText = document.getElementById('transcription');
+        const audioPlayerContainer = document.getElementById('audioPlayerContainer');
 
         let mediaRecorder;
         let audioChunks = [];
@@ -73,30 +76,21 @@
                     audioChunks.push(event.data);
                 };
 
-                mediaRecorder.onstop = async () => {
+                mediaRecorder.onstop = () => {
                     const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
                     const audioUrl = URL.createObjectURL(audioBlob);
-                    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
 
-                    const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-                    recognition.lang = 'zh-CN';
-                    recognition.interimResults = false;
+                    // 创建一个音频播放器元素
+                    const audioPlayer = document.createElement('audio');
+                    audioPlayer.src = audioUrl;
+                    audioPlayer.controls = true;
+                    audioPlayer.style.display = 'block';
+                    audioPlayerContainer.innerHTML = ''; // 清空之前的音频播放器
+                    audioPlayerContainer.appendChild(audioPlayer);
 
-                    recognition.onresult = event => {
-                        const transcript = event.results[0][0].transcript;
-                        transcriptionText.textContent = `识别的文字: ${transcript}`;
-                    };
-
-                    recognition.onerror = event => {
-                        console.error('语音识别错误:', event.error);
-                    };
-
-                    const audio = new Audio(audioUrl);
-                    const source = audioContext.createMediaElementSource(audio);
-                    source.connect(audioContext.destination);
-
-                    audio.play();
-                    recognition.start();
+                    // 将录音内容发送到语音识别服务
+                    recognizeSpeech(audioBlob);
+                    audioChunks = []; // 清空音频块数组
                 };
 
                 mediaRecorder.start();
@@ -116,10 +110,51 @@
             }
         }
 
+        // 语音识别
+        async function recognizeSpeech(blob) {
+            if (!window.SpeechRecognition && !window.webkitSpeechRecognition) {
+                console.error('当前浏览器不支持 SpeechRecognition API');
+                return;
+            }
+
+            const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+            recognition.lang = 'zh-CN';
+            recognition.interimResults = false;
+
+            recognition.onresult = event => {
+                const transcript = Array.from(event.results)
+                    .map(result => result[0])
+                    .map(result => result.transcript)
+                    .join('');
+                transcriptionText.textContent = `识别的文字: ${transcript}`;
+                console.log('识别的文字:', transcript); // 调试信息
+            };
+
+            recognition.onerror = event => {
+                console.error('语音识别错误:', event.error);
+            };
+
+            recognition.onend = () => {
+                console.log('语音识别结束'); // 调试信息
+            };
+
+            // 将 Blob 转换为 ArrayBuffer
+            const arrayBuffer = await new Response(blob).arrayBuffer();
+
+            // 创建一个 AudioContext 来播放音频
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            audioContext.decodeAudioData(arrayBuffer, buffer => {
+                const source = audioContext.createBufferSource();
+                source.buffer = buffer;
+                source.connect(audioContext.destination);
+                source.start(0);
+                recognition.start();
+            });
+        }
+
         // 绑定按钮事件
         startRecordingButton.addEventListener('click', startRecording);
         stopRecordingButton.addEventListener('click', stopRecording);
     </script>
 </body>
 </html>
-
