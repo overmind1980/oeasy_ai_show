@@ -110,7 +110,10 @@
             recognition.interimResults = false;
 
             recognition.onresult = event => {
-                const transcript = event.results[0][0].transcript;
+                const transcript = Array.from(event.results)
+                    .map(result => result[0])
+                    .map(result => result.transcript)
+                    .join('');
                 transcriptionText.textContent = `识别的文字: ${transcript}`;
             };
 
@@ -118,19 +121,18 @@
                 console.error('语音识别错误:', event.error);
             };
 
-            const fileReader = new FileReader();
-            fileReader.onload = () => {
-                const arrayBuffer = fileReader.result;
-                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                audioContext.decodeAudioData(arrayBuffer, buffer => {
-                    const source = audioContext.createBufferSource();
-                    source.buffer = buffer;
-                    source.connect(audioContext.destination);
-                    source.start(0);
-                    recognition.start();
-                });
-            };
-            fileReader.readAsArrayBuffer(blob);
+            // 将 Blob 转换为 ArrayBuffer
+            const arrayBuffer = await new Response(blob).arrayBuffer();
+
+            // 创建一个 AudioContext 来播放音频
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            audioContext.decodeAudioData(arrayBuffer, buffer => {
+                const source = audioContext.createBufferSource();
+                source.buffer = buffer;
+                source.connect(audioContext.destination);
+                source.start(0);
+                recognition.start();
+            });
         }
 
         // 绑定按钮事件
