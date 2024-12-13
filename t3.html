@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>语音转文字</title>
+    <style>
+        /* 基本样式 */
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+
+        .container {
+            text-align: center;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        button {
+            margin: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        #transcription, #audioPlayerContainer {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>语音转文字</h1>
+        <button id="startRecording">开始录音</button>
+        <button id="stopRecording" disabled>停止录音</button>
+        <h2>录音内容:</h2>
+        <div id="audioPlayerContainer"></div>
+        <h2>识别的文字:</h2>
+        <p id="transcription"></p>
+    </div>
+
+    <script>
+        const startRecordingButton = document.getElementById('startRecording');
+        const stopRecordingButton = document.getElementById('stopRecording');
+        const transcriptionText = document.getElementById('transcription');
+        const audioPlayerContainer = document.getElementById('audioPlayerContainer');
+
+        let mediaRecorder;
+        let audioChunks = [];
+
+        // 请求麦克风权限并开始录音
+        async function startRecording() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                mediaRecorder = new MediaRecorder(stream);
+
+                mediaRecorder.ondataavailable = event => {
+                    audioChunks.push(event.data);
+                };
+
+                mediaRecorder.onstop = () => {
+                    const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                    const audioUrl = URL.createObjectURL(audioBlob);
+
+                    // 创建一个音频播放器元素
+                    const audioPlayer = document.createElement('audio');
+                    audioPlayer.src = audioUrl;
+                    audioPlayer.controls = true;
+                    audioPlayer.style.display = 'block';
+                    audioPlayerContainer.innerHTML = ''; // 清空之前的音频播放器
+                    audioPlayerContainer.appendChild(audioPlayer);
+
+                    // 将录音内容发送到语音识别服务
+                    recognizeSpeech(audioBlob);
+                    audioChunks = []; // 清空音频块数组
+                };
+
+                mediaRecorder.start();
+                startRecordingButton.disabled = true;
+                stopRecordingButton.disabled = false;
+            } catch (error) {
+                console.error('获取麦克风权限失败:', error);
+            }
+        }
+
+        // 停止录音
+        function stopRecording() {
+            if (mediaRecorder) {
+                mediaRecorder.stop();
+                startRecordingButton.disabled = false;
+                stopRecordingButton.disabled = true;
+            }
+        }
+
+        // 语音识别
+        async function recognizeSpeech(blob) {
+            const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+            recognition.lang = 'zh-CN';
+            recognition.interimResults = false;
+
+            recognition.onresult = event => {
+                const transcript = Array.from(event.results)
+                    .map(result => result[0])
+                    .map(result => result.transcript)
+                    .join('');
+                transcriptionText.textContent = `识别的文字: ${transcript}`;
+            };
+
+            recognition.onerror = event => {
+                console.error('语音识别错误:', event.error);
+            };
+
+            // 将 Blob 转换为 ArrayBuffer
+            const arrayBuffer = await new Response(blob).arrayBuffer();
+
+            // 创建一个 AudioContext 来播放音频
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            audioContext.decodeAudioData(arrayBuffer, buffer => {
+                const source = audioContext.createBufferSource();
+                source.buffer = buffer;
+                source.connect(audioContext.destination);
+                source.start(0);
+                recognition.start();
+            });
+        }
+
+        // 绑定按钮事件
+        startRecordingButton.addEventListener('click', startRecording);
+        stopRecordingButton.addEventListener('click', stopRecording);
+    </script>
+</body>
+</html>
