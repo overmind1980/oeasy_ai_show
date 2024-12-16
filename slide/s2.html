@@ -109,7 +109,8 @@
         function handleTouchEnd(event) {
             if (yStartPos > yEndPos) { // 手指向上滑动
                 goToSlide(currentSlide + 1);
-            } else if (currentSlide === 0) { // 当前是红色页面
+            }  
+            if (currentSlide === 0) { // 当前是红色页面
                 const redTitle = document.getElementById('red-title');
                 const poem = document.getElementById('poem');
 
