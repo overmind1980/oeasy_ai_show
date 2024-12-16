@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>全屏幻灯片示例</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .slider-container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            transition: transform 0.5s ease;
+        }
+
+        .slide {
+            height: 100vh;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2em;
+            color: white;
+            text-align: center;
+            position: relative; /* 使内部元素可以绝对定位 */
+        }
+
+        .slide.red {
+            background-color: red;
+        }
+
+        .slide.green {
+            background-color: green;
+        }
+
+        .slide.blue {
+            background-color: blue;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .poem {
+            margin-top: 20px;
+            font-size: 1em;
+            line-height: 1.5;
+        }
+
+        .poem p {
+            margin: 5px 0;
+        }
+
+        .green img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+    </style>
+</head>
+<body>
+    <div id="slider" class="slider-container">
+        <div class="slide red">
+            <h1 id="red-title" class="hidden">我是红标题</h1>
+            <div id="poem" class="poem hidden">
+                <p>床前明月光，</p>
+                <p>疑是地上霜。</p>
+                <p>举头望明月，</p>
+                <p>低头思故乡。</p>
+            </div>
+        </div>
+        <div class="slide green hidden">
+            <img src="https://example.com/tree.jpg" alt="大树">
+        </div>
+        <div class="slide blue hidden">蓝色背景</div>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+
+        function goToSlide(index) {
+            if (index < 0) index = totalSlides - 1;
+            if (index >= totalSlides) index = 0;
+
+            // 隐藏所有幻灯片
+            slides.forEach(slide => slide.classList.add('hidden'));
+
+            // 显示当前幻灯片
+            slides[index].classList.remove('hidden');
+
+            currentSlide = index;
+        }
+
+        let yStartPos = 0;
+        let yEndPos = 0;
+        let isRedTitleShown = false;
+        let isPoemShown = false;
+
+        window.addEventListener('touchstart', handleTouchStart, false);
+        window.addEventListener('touchmove', handleTouchMove, false);
+        window.addEventListener('touchend', handleTouchEnd, false);
+
+        function handleTouchStart(event) {
+            yStartPos = event.touches[0].clientY;
+        }
+
+        function handleTouchMove(event) {
+            yEndPos = event.touches[0].clientY;
+        }
+
+        function handleTouchEnd(event) {
+            if (currentSlide === 0) { // 当前是红色页面
+                const redTitle = document.getElementById('red-title');
+                const poem = document.getElementById('poem');
+
+                if (!isRedTitleShown) {
+                    // 第一次触摸：显示 h1
+                    redTitle.classList.remove('hidden');
+                    isRedTitleShown = true;
+                } else if (!isPoemShown) {
+                    // 第二次触摸：显示古诗
+                    poem.classList.remove('hidden');
+                    isPoemShown = true;
+                }
+            }
+
+            // 检查是否向上滑动并且 h1 和 poem 都已显示
+            if (yStartPos > yEndPos && isRedTitleShown && isPoemShown) {
+                goToSlide(currentSlide + 1);
+            }
+
+            // 重置位置
+            yStartPos = 0;
+            yEndPos = 0;
+        }
+
+        // 初始化显示第一个幻灯片
+        goToSlide(0);
+    </script>
+</body>
+</html>
