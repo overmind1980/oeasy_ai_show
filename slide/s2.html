@@ -102,6 +102,12 @@
 
         function handleTouchStart(event) {
             yStartPos = event.touches[0].clientY;
+            // 检查是否点击了红色标题
+            const redTitle = document.getElementById('red-title');
+            const touches = event.touches;
+            if (touches.length === 1 && isPointInsideElement(touches[0], redTitle)) {
+                togglePoemVisibility();
+            }
         }
 
         function handleTouchMove(event) {
@@ -117,18 +123,27 @@
             yEndPos = 0;
         }
 
-        // 初始化显示第一个幻灯片
-        goToSlide(0);
+        function isPointInsideElement(point, element) {
+            const rect = element.getBoundingClientRect();
+            return (
+                point.clientX >= rect.left &&
+                point.clientX <= rect.right &&
+                point.clientY >= rect.top &&
+                point.clientY <= rect.bottom
+            );
+        }
 
-        // 点击标题显示诗
-        document.getElementById('red-title').addEventListener('click', function() {
+        function togglePoemVisibility() {
             const poem = document.getElementById('poem');
             if (poem.classList.contains('hidden')) {
                 poem.classList.remove('hidden');
             } else {
                 poem.classList.add('hidden');
             }
-        });
+        }
+
+        // 初始化显示第一个幻灯片
+        goToSlide(0);
     </script>
 </body>
 </html>
