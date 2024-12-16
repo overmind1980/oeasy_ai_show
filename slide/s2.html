@@ -107,9 +107,6 @@
         }
 
         function handleTouchEnd(event) {
-            if (yStartPos > yEndPos) { // 手指向上滑动
-                goToSlide(currentSlide + 1);
-            }  
             if (currentSlide === 0) { // 当前是红色页面
                 const redTitle = document.getElementById('red-title');
                 const poem = document.getElementById('poem');
@@ -121,6 +118,11 @@
                     // 第二次触摸：显示古诗
                     poem.classList.remove('hidden');
                 }
+            }
+
+            // 检查是否向上滑动并且 h1 和 poem 都已显示
+            if (yStartPos > yEndPos && !document.getElementById('red-title').classList.contains('hidden') && !document.getElementById('poem').classList.contains('hidden')) {
+                goToSlide(currentSlide + 1);
             }
 
             // 重置位置
