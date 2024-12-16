@@ -92,21 +92,42 @@
         }
 
         let touchCount = 0;
+        let yStartPos = 0;
+        let yEndPos = 0;
 
         window.addEventListener('touchstart', handleTouchStart, false);
+        window.addEventListener('touchmove', handleTouchMove, false);
+        window.addEventListener('touchend', handleTouchEnd, false);
 
         function handleTouchStart(event) {
+            yStartPos = event.touches[0].clientY;
             touchCount++;
-            const redTitle = document.getElementById('red-title');
-            const poem = document.getElementById('poem');
+        }
 
-            if (touchCount === 1) {
-                // 第一次触摸：显示 h1
-                redTitle.classList.remove('hidden');
-            } else if (touchCount === 2) {
-                // 第二次触摸：显示古诗
-                poem.classList.remove('hidden');
+        function handleTouchMove(event) {
+            yEndPos = event.touches[0].clientY;
+        }
+
+        function handleTouchEnd(event) {
+            if (yStartPos > yEndPos) { // 手指向上滑动
+                goToSlide(currentSlide + 1);
+            } else if (currentSlide === 0) { // 当前是红色页面
+                const redTitle = document.getElementById('red-title');
+                const poem = document.getElementById('poem');
+
+                if (touchCount === 1) {
+                    // 第一次触摸：显示 h1
+                    redTitle.classList.remove('hidden');
+                } else if (touchCount === 2) {
+                    // 第二次触摸：显示古诗
+                    poem.classList.remove('hidden');
+                }
             }
+
+            // 重置位置和计数
+            yStartPos = 0;
+            yEndPos = 0;
+            touchCount = 0;
         }
 
         // 初始化显示第一个幻灯片
