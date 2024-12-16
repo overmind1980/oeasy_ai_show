@@ -61,6 +61,13 @@
             max-width: 100%;
             max-height: 100%;
             object-fit: contain;
+            position: absolute;
+            bottom: -100%; /* 初始位置在底部外 */
+            transition: bottom 1s ease;
+        }
+
+        .green img.show {
+            bottom: 0; /* 移动到中间 */
         }
     </style>
 </head>
@@ -76,7 +83,7 @@
             </div>
         </div>
         <div class="slide green hidden">
-            <img src="https://imgs.699pic.com/images/600/735/805.jpg!detail.v1" alt="大树">
+            <img src="https://example.com/tree.jpg" alt="大树" id="tree-image">
         </div>
         <div class="slide blue hidden">蓝色背景</div>
     </div>
@@ -103,6 +110,7 @@
         let yEndPos = 0;
         let isRedTitleShown = false;
         let isPoemShown = false;
+        let isTreeImageShown = false;
 
         window.addEventListener('touchstart', handleTouchStart, false);
         window.addEventListener('touchmove', handleTouchMove, false);
@@ -130,11 +138,19 @@
                     poem.classList.remove('hidden');
                     isPoemShown = true;
                 }
-            }
+            } else if (currentSlide === 1) { // 当前是绿色页面
+                
+                // 检查是否向上滑动并且大树图片已显示
+                if (yStartPos > yEndPos && isTreeImageShown) {
+                    goToSlide(currentSlide + 1);
+                }
+                const treeImage = document.getElementById('tree-image');
 
-            // 检查是否向上滑动并且 h1 和 poem 都已显示
-            if (yStartPos > yEndPos && isRedTitleShown && isPoemShown) {
-                goToSlide(currentSlide + 1);
+                if (!isTreeImageShown) {
+                    // 第一次触摸：显示大树图片
+                    treeImage.classList.add('show');
+                    isTreeImageShown = true;
+                }
             }
 
             // 重置位置
