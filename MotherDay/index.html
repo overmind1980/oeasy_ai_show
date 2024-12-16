@@ -1,0 +1,89 @@
+<!--
+1.堆砌
+2.布局，定位
+    position
+    float
+3. 动画
+    帧动画
+        明确几个关键帧，把CSS属性写好，通过百分比把时间明确出来
+        把动画捆绑到元素上，同时给动画加上属性：delay，duration，是否线性等。
+        我们用js添加。
+4.用js控制元素
+    用getElementBy。。获取元素=>处理，逻辑的运算=>结果反馈到元素上。
+-->
+
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <link type="text/css" rel="stylesheet" href="css/layout.css">
+    <link type="text/css" rel="stylesheet" href="css/animations.css">
+</head>
+<body>
+<div class="page" id="page1">
+    <img class="pt-page-moveFromLeft pt-page-delay500" src="img/1-1.png">
+    <img class="pt-page-moveFromLeft pt-page-delay1000" src="img/1-2.png">
+    <img src="img/1-3.png">
+    <img src="img/1-4.png">
+    <img src="img/1-5.png">
+</div>
+
+<div class="page hide">
+    <img class="pt-page-moveFromLeft pt-page-delay500" src="img/2-1.png">
+    <img class="pt-page-moveFromLeft pt-page-delay1000" src="img/2-2.png">
+    <img src="img/2-3.png">
+    <img src="img/2-4.png">
+    <img src="img/2-5.png">
+</div>
+
+<div class="page hide">
+    <img src="img/3-1.png">
+    <img src="img/3-2.png">
+    <img src="img/3-3.png">
+    <img src="img/3-4.png">
+</div>
+
+<div class="page hide">
+    <img src="img/4-1.png">
+    <img src="img/4-2.png">
+    <img src="img/4-3.png">
+    <img src="img/4-4.png">
+</div>
+
+<div class="page hide">
+    <img src="img/5-1.png">
+    <img src="img/5-2.png">
+    <img src="img/5-3.png">
+    <img src="img/5-4.png">
+</div>
+
+<div class="page hide">
+    <img src="img/6-1.png">
+    <img src="img/6-2.png">
+    <img src="img/6-3.png">
+    <img src="img/6-4.png">
+    <img src="img/6-5.png">
+    <img src="img/6-6.png">
+</div>
+
+<div class="page hide">
+    <img src="img/7-1.png">
+    <img src="img/7-2.png">
+    <img src="img/7-3.png">
+    <img src="img/7-4.png">
+    <img src="img/7-5.png">
+</div>
+
+<div class="page hide">
+    <img src="img/8-1.png">
+    <img src="img/8-2.png">
+    <img src="img/8-3.png">
+    <img src="img/8-4.png">
+    <img src="img/8-5.png">
+    <img src="img/8-6.jpg">
+</div>
+</body>
+<script type="text/javascript" src="js/main.js"></script>
+
+</html>
