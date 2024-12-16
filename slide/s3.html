@@ -138,18 +138,23 @@
                     poem.classList.remove('hidden');
                     isPoemShown = true;
                 }
-            } else if (currentSlide === 1) { // 当前是绿色页面
-                
-                // 检查是否向上滑动并且大树图片已显示
-                if (yStartPos > yEndPos && isTreeImageShown) {
+
+                // 检查是否向上滑动并且 h1 和 poem 都已显示
+                if (yStartPos > yEndPos && isRedTitleShown && isPoemShown) {
                     goToSlide(currentSlide + 1);
                 }
+            } else if (currentSlide === 1) { // 当前是绿色页面
                 const treeImage = document.getElementById('tree-image');
 
                 if (!isTreeImageShown) {
                     // 第一次触摸：显示大树图片
                     treeImage.classList.add('show');
                     isTreeImageShown = true;
+                } else {
+                    // 再次触摸：检查是否向上滑动并且大树图片已显示
+                    if (yStartPos > yEndPos && isTreeImageShown) {
+                        goToSlide(currentSlide + 1);
+                    }
                 }
             }
 
