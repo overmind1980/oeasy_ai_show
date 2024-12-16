@@ -91,7 +91,6 @@
             currentSlide = index;
         }
 
-        let touchCount = 0;
         let yStartPos = 0;
         let yEndPos = 0;
 
@@ -101,7 +100,6 @@
 
         function handleTouchStart(event) {
             yStartPos = event.touches[0].clientY;
-            touchCount++;
         }
 
         function handleTouchMove(event) {
@@ -115,19 +113,18 @@
                 const redTitle = document.getElementById('red-title');
                 const poem = document.getElementById('poem');
 
-                if (touchCount === 1) {
+                if (redTitle.classList.contains('hidden')) {
                     // 第一次触摸：显示 h1
                     redTitle.classList.remove('hidden');
-                } else if (touchCount === 2) {
+                } else if (poem.classList.contains('hidden')) {
                     // 第二次触摸：显示古诗
                     poem.classList.remove('hidden');
                 }
             }
 
-            // 重置位置和计数
+            // 重置位置
             yStartPos = 0;
             yEndPos = 0;
-            touchCount = 0;
         }
 
         // 初始化显示第一个幻灯片
