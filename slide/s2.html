@@ -23,12 +23,12 @@
             height: 100vh;
             width: 100%;
             display: flex;
-            flex-direction: column;
             align-items: center;
             justify-content: center;
             font-size: 2em;
             color: white;
             text-align: center;
+            position: relative; /* 使内部元素可以绝对定位 */
         }
 
         .slide.red {
@@ -61,14 +61,12 @@
 <body>
     <div id="slider" class="slider-container">
         <div class="slide red">
-            <div class="content">
-                <h1 id="red-title">我是红标题</h1>
-                <div id="poem" class="poem hidden">
-                    <p>床前明月光，</p>
-                    <p>疑是地上霜。</p>
-                    <p>举头望明月，</p>
-                    <p>低头思故乡。</p>
-                </div>
+            <h1 id="red-title" class="hidden">我是红标题</h1>
+            <div id="poem" class="poem hidden">
+                <p>床前明月光，</p>
+                <p>疑是地上霜。</p>
+                <p>举头望明月，</p>
+                <p>低头思故乡。</p>
             </div>
         </div>
         <div class="slide green hidden">绿色背景</div>
@@ -93,52 +91,21 @@
             currentSlide = index;
         }
 
-        let yStartPos = 0;
-        let yEndPos = 0;
+        let touchCount = 0;
 
         window.addEventListener('touchstart', handleTouchStart, false);
-        window.addEventListener('touchmove', handleTouchMove, false);
-        window.addEventListener('touchend', handleTouchEnd, false);
 
         function handleTouchStart(event) {
-            yStartPos = event.touches[0].clientY;
-            // 检查是否点击了红色标题
+            touchCount++;
             const redTitle = document.getElementById('red-title');
-            const touches = event.touches;
-            if (touches.length === 1 && isPointInsideElement(touches[0], redTitle)) {
-                togglePoemVisibility();
-            }
-        }
-
-        function handleTouchMove(event) {
-            yEndPos = event.touches[0].clientY;
-        }
-
-        function handleTouchEnd(event) {
-            if (yStartPos > yEndPos) { // 手指向上滑动
-                goToSlide(currentSlide + 1);
-            }
-            // 重置位置
-            yStartPos = 0;
-            yEndPos = 0;
-        }
-
-        function isPointInsideElement(point, element) {
-            const rect = element.getBoundingClientRect();
-            return (
-                point.clientX >= rect.left &&
-                point.clientX <= rect.right &&
-                point.clientY >= rect.top &&
-                point.clientY <= rect.bottom
-            );
-        }
-
-        function togglePoemVisibility() {
             const poem = document.getElementById('poem');
-            if (poem.classList.contains('hidden')) {
+
+            if (touchCount === 1) {
+                // 第一次触摸：显示 h1
+                redTitle.classList.remove('hidden');
+            } else if (touchCount === 2) {
+                // 第二次触摸：显示古诗
                 poem.classList.remove('hidden');
-            } else {
-                poem.classList.add('hidden');
             }
         }
 
