@@ -62,12 +62,15 @@
             max-height: 100%;
             object-fit: contain;
             position: absolute;
-            bottom: -100%; /* 初始位置在底部外 */
-            transition: bottom 1s ease;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            transition: opacity 1s ease;
+            opacity: 0; /* 初始状态为透明 */
         }
 
         .green img.show {
-            bottom: 0; /* 移动到中间 */
+            opacity: 1; /* 显示时变为不透明 */
         }
     </style>
 </head>
