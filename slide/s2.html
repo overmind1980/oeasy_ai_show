@@ -93,6 +93,8 @@
 
         let yStartPos = 0;
         let yEndPos = 0;
+        let isRedTitleShown = false;
+        let isPoemShown = false;
 
         window.addEventListener('touchstart', handleTouchStart, false);
         window.addEventListener('touchmove', handleTouchMove, false);
@@ -111,19 +113,21 @@
                 const redTitle = document.getElementById('red-title');
                 const poem = document.getElementById('poem');
 
-                if (redTitle.classList.contains('hidden')) {
+                // 检查是否向上滑动并且 h1 和 poem 都已显示
+                if (yStartPos > yEndPos && isRedTitleShown && isPoemShown) {
+                    goToSlide(currentSlide + 1);
+                }
+                if (!isRedTitleShown) {
                     // 第一次触摸：显示 h1
                     redTitle.classList.remove('hidden');
-                } else if (poem.classList.contains('hidden')) {
+                    isRedTitleShown = true;
+                } else if (!isPoemShown) {
                     // 第二次触摸：显示古诗
                     poem.classList.remove('hidden');
+                    isPoemShown = true;
                 }
             }
 
-            // 检查是否向上滑动并且 h1 和 poem 都已显示
-            if (yStartPos > yEndPos && !document.getElementById('red-title').classList.contains('hidden') && !document.getElementById('poem').classList.contains('hidden')) {
-                goToSlide(currentSlide + 1);
-            }
 
             // 重置位置
             yStartPos = 0;
