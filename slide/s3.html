@@ -57,19 +57,29 @@
             margin: 5px 0;
         }
 
+        .green h1 {
+            opacity: 0;
+            transition: opacity 1s ease;
+        }
+
+        .green h1.show {
+            opacity: 1;
+        }
+
         .green img {
             max-width: 100%;
             max-height: 100%;
             object-fit: contain;
             position: absolute;
-            top: 50%;
+            bottom: -100%; /* 初始位置在底部外 */
             left: 50%;
-            transform: translate(-50%, -50%);
-            transition: opacity 1s ease;
+            transform: translateX(-50%);
+            transition: bottom 1s ease, opacity 1s ease;
             opacity: 0; /* 初始状态为透明 */
         }
 
         .green img.show {
+            bottom: 50%; /* 显示时移动到中间 */
             opacity: 1; /* 显示时变为不透明 */
         }
     </style>
@@ -86,6 +96,7 @@
             </div>
         </div>
         <div class="slide green hidden">
+            <h1 id="green-title" class="hidden">我是绿标题</h1>
             <img src="https://imgs.699pic.com/images/600/735/805.jpg!detail.v1" alt="大树" id="tree-image">
         </div>
         <div class="slide blue hidden">蓝色背景</div>
@@ -113,6 +124,7 @@
         let yEndPos = 0;
         let isRedTitleShown = false;
         let isPoemShown = false;
+        let isGreenTitleShown = false;
         let isTreeImageShown = false;
 
         window.addEventListener('touchstart', handleTouchStart, false);
@@ -132,6 +144,10 @@
                 const redTitle = document.getElementById('red-title');
                 const poem = document.getElementById('poem');
 
+                // 检查是否向上滑动并且 h1 和 poem 都已显示
+                if (yStartPos > yEndPos && isRedTitleShown && isPoemShown) {
+                    goToSlide(currentSlide + 1);
+                }
                 if (!isRedTitleShown) {
                     // 第一次触摸：显示 h1
                     redTitle.classList.remove('hidden');
@@ -141,16 +157,17 @@
                     poem.classList.remove('hidden');
                     isPoemShown = true;
                 }
-
-                // 检查是否向上滑动并且 h1 和 poem 都已显示
-                if (yStartPos > yEndPos && isRedTitleShown && isPoemShown) {
-                    goToSlide(currentSlide + 1);
-                }
             } else if (currentSlide === 1) { // 当前是绿色页面
+                const greenTitle = document.getElementById('green-title');
                 const treeImage = document.getElementById('tree-image');
 
-                if (!isTreeImageShown) {
-                    // 第一次触摸：显示大树图片
+                if (!isGreenTitleShown) {
+                    // 第一次触摸：显示 h1
+                    greenTitle.classList.remove('hidden');
+                    greenTitle.classList.add('show');
+                    isGreenTitleShown = true;
+                } else if (!isTreeImageShown) {
+                    // 第二次触摸：显示大树图片
                     treeImage.classList.add('show');
                     isTreeImageShown = true;
                 } else {
