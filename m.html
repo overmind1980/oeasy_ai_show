@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>表格形式的简单计算器</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f4f4;
+            position: relative;
+            overflow: hidden;
+        }
+
+        table {
+            border-collapse: collapse;
+            background-color: #fff;
+            border-radius: 15px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        td {
+            padding: 8px;
+        }
+
+        input[type="text"] {
+            width: calc(100% - 30px);
+            padding: 15px;
+            font-size: 32px;
+            text-align: right;
+            margin-bottom: 10px;
+            border: none;
+            background-color: #e9e9e9;
+            border-radius: 10px;
+            white-space: nowrap;
+            overflow-x: auto;
+        }
+
+        button {
+            width: 100%;
+            padding: 20px;
+            font-size: 24px;
+            border: none;
+            color: white;
+            cursor: pointer;
+            border-radius: 10px;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            filter: brightness(90%);
+        }
+
+        button:active {
+            transform: scale(0.95);
+        }
+
+        /* 通过 id 设置低饱和度深色按钮颜色 */
+        #btn7 {
+            background-color: #663333;
+        }
+
+        #btn8 {
+            background-color: #664c33;
+        }
+
+        #btn9 {
+            background-color: #666633;
+        }
+
+        #btnDiv {
+            background-color: #4c6633;
+        }
+
+        #btn4 {
+            background-color: #336633;
+        }
+
+        #btn5 {
+            background-color: #33664c;
+        }
+
+        #btn6 {
+            background-color: #336666;
+        }
+
+        #btnMul {
+            background-color: #334c66;
+        }
+
+        #btn1 {
+            background-color: #333366;
+        }
+
+        #btn2 {
+            background-color: #4c3366;
+        }
+
+        #btn3 {
+            background-color: #663366;
+        }
+
+        #btnSub {
+            background-color: #66334c;
+        }
+
+        #btn0 {
+            background-color: #736666;
+        }
+
+        #btnDot {
+            background-color: #667366;
+        }
+
+        #btnEq {
+            background-color: #666673;
+        }
+
+        #btnAdd {
+            background-color: #736673;
+        }
+
+        #btnClear {
+            background-color: #737366;
+        }
+
+        /* 烟花容器 */
+        #fireworks {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .firework {
+            position: absolute;
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            animation: explode 1s ease-out forwards;
+        }
+
+        @keyframes explode {
+            0% {
+                transform: scale(0);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(10);
+                opacity: 0;
+            }
+        }
+
+        /* 独角兽 logo 样式 */
+        #unicorn-logo {
+            width: 100px;
+            height: 100px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 独角兽 logo -->
+    <img id="unicorn-logo" src="u.png" alt="独角兽 logo">
+    <table>
+        <tr>
+            <td colspan="4">
+                <input type="text" id="display" readonly>
+            </td>
+        </tr>
+        <tr>
+            <td><button id="btn7" onclick="appendToDisplay('7')">7</button></td>
+            <td><button id="btn8" onclick="appendToDisplay('8')">8</button></td>
+            <td><button id="btn9" onclick="appendToDisplay('9')">9</button></td>
+            <td><button id="btnDiv" onclick="appendToDisplay('/')">/</button></td>
+        </tr>
+        <tr>
+            <td><button id="btn4" onclick="appendToDisplay('4')">4</button></td>
+            <td><button id="btn5" onclick="appendToDisplay('5')">5</button></td>
+            <td><button id="btn6" onclick="appendToDisplay('6')">6</button></td>
+            <td><button id="btnMul" onclick="appendToDisplay('*')">*</button></td>
+        </tr>
+        <tr>
+            <td><button id="btn1" onclick="appendToDisplay('1')">1</button></td>
+            <td><button id="btn2" onclick="appendToDisplay('2')">2</button></td>
+            <td><button id="btn3" onclick="appendToDisplay('3')">3</button></td>
+            <td><button id="btnSub" onclick="appendToDisplay('-')">-</button></td>
+        </tr>
+        <tr>
+            <td><button id="btn0" onclick="appendToDisplay('0')">0</button></td>
+            <td><button id="btnDot" onclick="appendToDisplay('.')">.</button></td>
+            <td><button id="btnEq" onclick="calculate()">=</button></td>
+            <td><button id="btnAdd" onclick="appendToDisplay('+')">+</button></td>
+        </tr>
+        <tr>
+            <td colspan="4"><button id="btnClear" onclick="clearDisplay()">C</button></td>
+        </tr>
+    </table>
+    <div id="fireworks"></div>
+    <audio id="clickSound" src="https://www.soundjay.com/button/beep-07.wav"></audio>
+    <script>
+        function appendToDisplay(value) {
+            playSound();
+            vibrate();
+            document.getElementById('display').value += value;
+        }
+
+        function clearDisplay() {
+            playSound();
+            vibrate();
+            document.getElementById('display').value = '';
+        }
+
+        function calculate() {
+            playSound();
+            vibrate();
+            try {
+                document.getElementById('display').value = eval(document.getElementById('display').value);
+                showFireworks();
+            } catch (error) {
+                document.getElementById('display').value = '错误';
+            }
+        }
+
+        function playSound() {
+            const audio = document.getElementById('clickSound');
+            audio.currentTime = 0;
+            audio.play();
+        }
+
+        function vibrate() {
+            if ('vibrate' in navigator) {
+                navigator.vibrate(100);
+            }
+        }
+
+        function showFireworks() {
+            const fireworks = document.getElementById('fireworks');
+            for (let i = 0; i < 50; i++) {
+                const firework = document.createElement('div');
+                firework.classList.add('firework');
+                firework.style.left = Math.random() * 100 + '%';
+                firework.style.top = Math.random() * 100 + '%';
+                const colors = ['#FF0000', '#FF7F00', '#FFFF00', '#00FF00', '#0000FF', '#4B0082', '#8F00FF'];
+                firework.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                fireworks.appendChild(firework);
+                setTimeout(() => {
+                    fireworks.removeChild(firework);
+                }, 1000);
+            }
+        }
+    </script>
+</body>
+
+</html>
+    
