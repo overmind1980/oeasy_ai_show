@@ -1,41 +1,92 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>触摸显示坐标</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>全屏翻页</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
+        * {
             margin: 0;
-            background-color: #f4f4f4;
+            padding: 0;
+            box-sizing: border-box;
         }
 
-        #info {
-            font-size: 18px;
-            text-align: center;
+        body, html {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .page {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+        }
+
+        .red {
+            background-color: red;
+        }
+
+        .green {
+            background-color: green;
+        }
+
+        .blue {
+            background-color: blue;
+        }
+
+        #redPage {
+            display: block; /* 初始显示红色页面 */
         }
     </style>
 </head>
-
 <body>
-    <div id="info">触摸屏幕查看坐标</div>
-    <script>
-        const infoDiv = document.getElementById('info');
+    <div class="page red" id="redPage"></div>
+    <div class="page green" id="greenPage"></div>
+    <div class="page blue" id="bluePage"></div>
 
-        document.addEventListener('touchstart', function (event) {
-            const touch = event.touches[0];
-            const x = touch.clientX;
-            const y = touch.clientY;
-            infoDiv.textContent = `触摸点坐标: X = ${x}, Y = ${y}`;
+    <script>
+        let currentPage = 0; // 当前显示的页面索引
+        const pages = document.querySelectorAll('.page');
+        const totalPages = pages.length;
+
+        function showPage(index) {
+            for (let i = 0; i < totalPages; i++) {
+                pages[i].style.display = 'none';
+            }
+            if (index >= 0 && index < totalPages) {
+                pages[index].style.display = 'block';
+            }
+        }
+
+        let startX, startY, endX, endY;
+
+        document.addEventListener('touchstart', function(event) {
+            startX = event.touches[0].clientX;
+            startY = event.touches[0].clientY;
+        });
+
+        document.addEventListener('touchend', function(event) {
+            endX = event.changedTouches[0].clientX;
+            endY = event.changedTouches[0].clientY;
+
+            const deltaX = endX - startX;
+            const deltaY = endY - startY;
+
+            if (Math.abs(deltaX) > 30) {
+                if (deltaX > 0) {
+                    // 向右滑动，显示上一个页面
+                    currentPage = (currentPage - 1 + totalPages) % totalPages;
+                } else {
+                    // 向左滑动，显示下一个页面
+                    currentPage = (currentPage + 1) % totalPages;
+                }
+                showPage(currentPage);
+            }
         });
     </script>
 </body>
-
 </html>
-    
