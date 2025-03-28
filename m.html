@@ -4,263 +4,95 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>表格形式的简单计算器</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f4f4f4;
-            position: relative;
-            overflow: hidden;
-        }
-
-        table {
-            border-collapse: collapse;
-            background-color: #fff;
-            border-radius: 15px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-            z-index: 1;
-        }
-
-        td {
-            padding: 8px;
-        }
-
-        input[type="text"] {
-            width: calc(100% - 30px);
-            padding: 15px;
-            font-size: 32px;
-            text-align: right;
-            margin-bottom: 10px;
-            border: none;
-            background-color: #e9e9e9;
-            border-radius: 10px;
-            white-space: nowrap;
-            overflow-x: auto;
-        }
-
-        button {
-            width: 100%;
-            padding: 20px;
-            font-size: 24px;
-            border: none;
-            color: white;
-            cursor: pointer;
-            border-radius: 10px;
-            transition: background-color 0.3s;
-        }
-
-        button:hover {
-            filter: brightness(90%);
-        }
-
-        button:active {
-            transform: scale(0.95);
-        }
-
-        /* 通过 id 设置低饱和度深色按钮颜色 */
-        #btn7 {
-            background-color: #663333;
-        }
-
-        #btn8 {
-            background-color: #664c33;
-        }
-
-        #btn9 {
-            background-color: #666633;
-        }
-
-        #btnDiv {
-            background-color: #4c6633;
-        }
-
-        #btn4 {
-            background-color: #336633;
-        }
-
-        #btn5 {
-            background-color: #33664c;
-        }
-
-        #btn6 {
-            background-color: #336666;
-        }
-
-        #btnMul {
-            background-color: #334c66;
-        }
-
-        #btn1 {
-            background-color: #333366;
-        }
-
-        #btn2 {
-            background-color: #4c3366;
-        }
-
-        #btn3 {
-            background-color: #663366;
-        }
-
-        #btnSub {
-            background-color: #66334c;
-        }
-
-        #btn0 {
-            background-color: #736666;
-        }
-
-        #btnDot {
-            background-color: #667366;
-        }
-
-        #btnEq {
-            background-color: #666673;
-        }
-
-        #btnAdd {
-            background-color: #736673;
-        }
-
-        #btnClear {
-            background-color: #737366;
-        }
-
-        /* 烟花容器 */
-        #fireworks {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-        }
-
-        .firework {
-            position: absolute;
-            width: 5px;
-            height: 5px;
-            border-radius: 50%;
-            animation: explode 1s ease-out forwards;
-        }
-
-        @keyframes explode {
-            0% {
-                transform: scale(0);
-                opacity: 1;
-            }
-            100% {
-                transform: scale(10);
-                opacity: 0;
-            }
-        }
-
-        /* 独角兽 logo 样式 */
-        #unicorn-logo {
-            width: 100px;
-            height: 100px;
-            margin-bottom: 20px;
-        }
-    </style>
+    <title>中国各省份人口地图</title>
+    <!-- 引入 ECharts 文件 -->
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.2/dist/echarts.min.js"></script>
+    <!-- 引入中国地图的 GeoJSON 文件 -->
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.2/map/js/china.js"></script>
 </head>
 
 <body>
-    <!-- 独角兽 logo -->
-    <img id="unicorn-logo" src="u.png" alt="独角兽 logo">
-    <table>
-        <tr>
-            <td colspan="4">
-                <input type="text" id="display" readonly>
-            </td>
-        </tr>
-        <tr>
-            <td><button id="btn7" onclick="appendToDisplay('7')">7</button></td>
-            <td><button id="btn8" onclick="appendToDisplay('8')">8</button></td>
-            <td><button id="btn9" onclick="appendToDisplay('9')">9</button></td>
-            <td><button id="btnDiv" onclick="appendToDisplay('/')">/</button></td>
-        </tr>
-        <tr>
-            <td><button id="btn4" onclick="appendToDisplay('4')">4</button></td>
-            <td><button id="btn5" onclick="appendToDisplay('5')">5</button></td>
-            <td><button id="btn6" onclick="appendToDisplay('6')">6</button></td>
-            <td><button id="btnMul" onclick="appendToDisplay('*')">*</button></td>
-        </tr>
-        <tr>
-            <td><button id="btn1" onclick="appendToDisplay('1')">1</button></td>
-            <td><button id="btn2" onclick="appendToDisplay('2')">2</button></td>
-            <td><button id="btn3" onclick="appendToDisplay('3')">3</button></td>
-            <td><button id="btnSub" onclick="appendToDisplay('-')">-</button></td>
-        </tr>
-        <tr>
-            <td><button id="btn0" onclick="appendToDisplay('0')">0</button></td>
-            <td><button id="btnDot" onclick="appendToDisplay('.')">.</button></td>
-            <td><button id="btnEq" onclick="calculate()">=</button></td>
-            <td><button id="btnAdd" onclick="appendToDisplay('+')">+</button></td>
-        </tr>
-        <tr>
-            <td colspan="4"><button id="btnClear" onclick="clearDisplay()">C</button></td>
-        </tr>
-    </table>
-    <div id="fireworks"></div>
-    <audio id="clickSound" src="https://www.soundjay.com/button/beep-07.wav"></audio>
-    <script>
-        function appendToDisplay(value) {
-            playSound();
-            vibrate();
-            document.getElementById('display').value += value;
-        }
-
-        function clearDisplay() {
-            playSound();
-            vibrate();
-            document.getElementById('display').value = '';
-        }
-
-        function calculate() {
-            playSound();
-            vibrate();
+    <!-- 为 ECharts 准备一个具备大小（宽高）的 DOM -->
+    <div id="main" style="width: 800px;height:600px;"></div>
+    <script type="text/javascript">
+        document.addEventListener('DOMContentLoaded', function () {
             try {
-                document.getElementById('display').value = eval(document.getElementById('display').value);
-                showFireworks();
+                // 初始化 echarts 实例
+                var myChart = echarts.init(document.getElementById('main'));
+
+                // 假设这是 2020 年第七次人口普查各省份的人口数据（单位：万人）
+                var data = [
+                    { name: '北京', value: 2189.3 },
+                    { name: '天津', value: 1386.6 },
+                    { name: '河北', value: 7461.02 },
+                    { name: '山西', value: 3491.56 },
+                    { name: '内蒙古', value: 2404.92 },
+                    { name: '辽宁', value: 4259.14 },
+                    { name: '吉林', value: 2407.35 },
+                    { name: '黑龙江', value: 3185.01 },
+                    { name: '上海', value: 2487.09 },
+                    { name: '江苏', value: 8474.8 },
+                    { name: '浙江', value: 6456.76 },
+                    { name: '安徽', value: 6102.72 },
+                    { name: '福建', value: 4154.01 },
+                    { name: '江西', value: 4518.86 },
+                    { name: '山东', value: 10152.75 },
+                    { name: '河南', value: 9936.55 },
+                    { name: '湖北', value: 5775.26 },
+                    { name: '湖南', value: 6644.49 },
+                    { name: '广东', value: 12601.25 },
+                    { name: '海南', value: 1008.12 },
+                    { name: '重庆', value: 3205.42 },
+                    { name: '四川', value: 8367.49 },
+                    { name: '贵州', value: 3856.21 },
+                    { name: '云南', value: 4720.93 },
+                    { name: '西藏', value: 364.81 },
+                    { name: '陕西', value: 3952.89 },
+                    { name: '甘肃', value: 2501.98 },
+                    { name: '青海', value: 592.39 },
+                    { name: '宁夏', value: 720.27 },
+                    { name: '新疆', value: 2585.23 },
+                    { name: '台湾', value: 2356.12 },
+                    { name: '香港', value: 747.42 },
+                    { name: '澳门', value: 68.32 }
+                ];
+
+                // 指定图表的配置项和数据
+                var option = {
+                    tooltip: {
+                        trigger: 'item',
+                        formatter: '{b}<br/>人口: {c} 万人'
+                    },
+                    visualMap: {
+                        min: 0,
+                        max: 13000,
+                        text: ['高', '低'],
+                        realtime: false,
+                        calculable: true,
+                        inRange: {
+                            color: ['#e0ffff', '#006edd']
+                        }
+                    },
+                    series: [
+                        {
+                            name: '人口数',
+                            type: 'map',
+                            mapType: 'china',
+                            label: {
+                                show: true,
+                                color: '#000'
+                            },
+                            data: data
+                        }
+                    ]
+                };
+
+                // 使用刚指定的配置项和数据显示图表。
+                myChart.setOption(option);
             } catch (error) {
-                document.getElementById('display').value = '错误';
+                console.error('ECharts 初始化出错:', error);
             }
-        }
-
-        function playSound() {
-            const audio = document.getElementById('clickSound');
-            audio.currentTime = 0;
-            audio.play();
-        }
-
-        function vibrate() {
-            if ('vibrate' in navigator) {
-                navigator.vibrate(100);
-            }
-        }
-
-        function showFireworks() {
-            const fireworks = document.getElementById('fireworks');
-            for (let i = 0; i < 50; i++) {
-                const firework = document.createElement('div');
-                firework.classList.add('firework');
-                firework.style.left = Math.random() * 100 + '%';
-                firework.style.top = Math.random() * 100 + '%';
-                const colors = ['#FF0000', '#FF7F00', '#FFFF00', '#00FF00', '#0000FF', '#4B0082', '#8F00FF'];
-                firework.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-                fireworks.appendChild(firework);
-                setTimeout(() => {
-                    fireworks.removeChild(firework);
-                }, 1000);
-            }
-        }
+        });
     </script>
 </body>
 
