@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>陈真 - 传奇武术家</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    
+    <!-- 配置Tailwind自定义颜色和字体 -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#B71C1C',    // 红色为主色调，代表武术的激情与力量
+                        secondary: '#1A237E',  // 深蓝色为辅助色
+                        accent: '#FFC107',     // 金色为强调色
+                        dark: '#121212',       // 深色背景
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                        display: ['"Ma Shan Zheng"', 'cursive', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    
+    <!-- 自定义工具类 -->
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .text-shadow {
+                text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            }
+            .text-shadow-lg {
+                text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.7);
+            }
+            .animate-float {
+                animation: float 6s ease-in-out infinite;
+            }
+            .animate-float-delay-1 {
+                animation: float 6s ease-in-out 1s infinite;
+            }
+            .animate-float-delay-2 {
+                animation: float 6s ease-in-out 2s infinite;
+            }
+            .animate-float-delay-3 {
+                animation: float 6s ease-in-out 3s infinite;
+            }
+            .animate-float-delay-4 {
+                animation: float 6s ease-in-out 4s infinite;
+            }
+            .animate-float-delay-5 {
+                animation: float 6s ease-in-out 5s infinite;
+            }
+            .animate-float-delay-6 {
+                animation: float 6s ease-in-out 6s infinite;
+            }
+            .bg-blur {
+                backdrop-filter: blur(8px);
+            }
+        }
+        
+        /* 自定义动画 */
+        @keyframes float {
+            0% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+            100% {
+                transform: translateY(0px);
+            }
+        }
+    </style>
+    
+    <!-- 导入中文字体 -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Ma+Shan+Zheng&display=swap" rel="stylesheet">
+</head>
+<body class="min-h-screen overflow-x-hidden">
+    <!-- 固定背景图 -->
+    <div class="fixed inset-0 z-0">
+        <img src="https://img.picui.cn/free/2025/06/13/684bcb18be562.png" alt="陈真背景图" class="w-full h-full object-cover">
+        <!-- 半透明叠加层增强文字可读性 -->
+        <div class="absolute inset-0 bg-dark/60"></div>
+    </div>
+    
+    <!-- 主要内容 -->
+    <main class="relative z-10 min-h-screen flex flex-col items-center justify-center p-4">
+        <!-- 标题区域 -->
+        <header class="mb-16 text-center">
+            <h1 class="text-[clamp(3rem,8vw,6rem)] font-display font-bold text-accent text-shadow-lg mb-4 animate-float">陈真</h1>
+            <p class="text-[clamp(1.5rem,3vw,2.5rem)] text-white text-shadow mb-8">传奇武术家 · 民族英雄</p>
+            <div class="w-24 h-1 bg-primary mx-auto rounded-full"></div>
+        </header>
+        
+        <!-- 资料卡片网格 -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl w-full">
+            <!-- 基本信息卡片 -->
+            <div class="bg-white/10 backdrop-blur-lg rounded-xl p-6 shadow-2xl border border-white/20 animate-float-delay-1">
+                <div class="flex items-center mb-4">
+                    <div class="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center mr-4">
+                        <i class="fa fa-user text-primary text-xl"></i>
+                    </div>
+                    <h2 class="text-2xl font-bold text-white">基本信息</h2>
+                </div>
+                <ul class="space-y-3 text-white/90">
+                    <li class="flex items-start">
+                        <span class="w-24 font-medium text-accent">姓名：</span>
+                        <span>陈真</span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="w-24 font-medium text-accent">生卒：</span>
+                        <span>1892年 - 1918年</span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="w-24 font-medium text-accent">籍贯：</span>
+                        <span>湖北省襄阳市</span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="w-24 font-medium text-accent">职业：</span>
+                        <span>武术家、霍元甲弟子</span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="w-24 font-medium text-accent">门派：</span>
+                        <span>迷踪拳</span>
+                    </li>
+                </ul>
+            </div>
+            
+            <!-- 生平事迹卡片 -->
+            <div class="bg-white/10 backdrop-blur-lg rounded-xl p-6 shadow-2xl border border-white/20 animate-float-delay-2">
+                <div class="flex items-center mb-4">
+                    <div class="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center mr-4">
+                        <i class="fa fa-history text-primary text-xl"></i>
+                    </div>
+                    <h2 class="text-2xl font-bold text-white">生平事迹</h2>
+                </div>
+                <ul class="space-y-3 text-white/90">
+                    <li class="flex items-start">
+                        <span class="w-10 h-10 rounded-full bg-secondary/30 flex items-center justify-center mr-3 text-sm font-medium">1</span>
+                        <span>拜入霍元甲门下，成为精武门重要成员</span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="w-10 h-10 rounded-full bg-secondary/30 flex items-center justify-center mr-3 text-sm font-medium">2</span>
+                        <span>霍元甲被日本人毒害后，陈真决心为师父报仇</span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="w-10 h-10 rounded-full bg-secondary/30 flex items-center justify-center mr-3 text-sm font-medium">3</span>
+                        <span>独自闯入日本道馆与一众日本高手较量，最终手刃了仇人</span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="w-10 h-10 rounded-full bg-secondary/30 flex items-center justify-center mr-3 text-sm font-medium">4</span>
+                        <span>后因遭日本人报复，不幸中弹身亡</span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="w-10 h-10 rounded-full bg-secondary/30 flex items-center justify-center mr-3 text-sm font-medium">5</span>
+                        <span>其英雄事迹被改编为多部影视作品，成为民族精神的象征</span>
+                    </li>
+                </ul>
+            </div>
+            
+            <!-- 武术成就卡片 -->
+            <div class="bg-white/10 backdrop-blur-lg rounded-xl p-6 shadow-2xl border border-white/20 animate-float-delay-3">
+                <div class="flex items-center mb-4">
+                    <div class="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center mr-4">
+                        <i class="fa fa-trophy text-primary text-xl"></i>
+                    </div>
+                    <h2 class="text-2xl font-bold text-white">武术成就</h2>
+                </div>
+                <ul class="space-y-3 text-white/90">
+                    <li class="flex items-start">
+                        <span class="w-10 h-10 rounded-full bg-secondary/30 flex items-center justify-center mr-3 text-sm font-medium">1</span>
+                        <span>将迷踪拳发扬光大，成为一代宗师</span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="w-10 h-10 rounded-full bg-secondary/30 flex items-center justify-center mr-3 text-sm font-medium">2</span>
+                        <span>多次击败外国高手，为中国人扬眉吐气</span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="w-10 h-10 rounded-full bg-secondary/30 flex items-center justify-center mr-3 text-sm font-medium">3</span>
+                        <span>创办精武体育会分部，培养了大批武术人才</span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="w-10 h-10 rounded-full bg-secondary/30 flex items-center justify-center mr-3 text-sm font-medium">4</span>
+                        <span>著有《迷踪拳谱》，对武术理论有重要贡献</span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="w-10 h-10 rounded-full bg-secondary/30 flex items-center justify-center mr-3 text-sm font-medium">5</span>
+                        <span>其武术精神激励了无数中国人的爱国热情</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- 名言区域 -->
+        <div class="mt-16 max-w-4xl w-full text-center">
+            <div class="bg-white/10 backdrop-blur-lg rounded-xl p-8 shadow-2xl border border-white/20 animate-float-delay-4">
+                <div class="text-accent text-4xl mb-4">
+                    <i class="fa fa-quote-left"></i>
+                </div>
+                <p class="text-[clamp(1.2rem,3vw,1.8rem)] text-white/90 italic mb-6">
+                    武术虽然是一种武装的力量，但是我们中国武术，是包含了儒家的哲理，武德，也就是仁，推己及人，这是我们中国人独特的人文精神。
+                </p>
+                <div class="text-accent text-4xl mt-4">
+                    <i class="fa fa-quote-right"></i>
+                </div>
+                <p class="text-xl font-medium text-accent mt-6">- 陈真</p>
+            </div>
+        </div>
+        
+        <!-- 影视作品区域 -->
+        <div class="mt-16 max-w-6xl w-full">
+            <h2 class="text-3xl font-bold text-white text-center mb-8 animate-float-delay-5">相关影视作品</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="group relative overflow-hidden rounded-lg">
+                    <img src="https://picsum.photos/seed/film1/300/400" alt="大侠霍元甲" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-gradient-to-t from-dark/90 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
+                        <p class="text-white font-medium">大侠霍元甲</p>
+                    </div>
+                </div>
+                <div class="group relative overflow-hidden rounded-lg">
+                    <img src="https://picsum.photos/seed/film2/300/400" alt="陈真" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-gradient-to-t from-dark/90 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
+                        <p class="text-white font-medium">陈真</p>
+                    </div>
+                </div>
+                <div class="group relative overflow-hidden rounded-lg">
+                    <img src="https://picsum.photos/seed/film3/300/400" alt="精武门" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-gradient-to-t from-dark/90 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
+                        <p class="text-white font-medium">精武门</p>
+                    </div>
+                </div>
+                <div class="group relative overflow-hidden rounded-lg">
+                    <img src="https://picsum.photos/seed/film4/300/400" alt="陈真传奇" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-gradient-to-t from-dark/90 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
+                        <p class="text-white font-medium">陈真传奇</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 页脚 -->
+        <footer class="mt-20 text-center text-white/60 text-sm animate-float-delay-6">
+            <p>陈真 - 民族英雄 · 武术传奇</p>
+            <p class="mt-2">© 2025 精武门纪念馆</p>
+        </footer>
+    </main>
+</body>
+</html>
