@@ -63,6 +63,12 @@
             .bg-blur {
                 backdrop-filter: blur(8px);
             }
+            .animate-rotate {
+                animation: rotate 3s linear infinite;
+            }
+            .pause-rotate {
+                animation-play-state: paused;
+            }
         }
         
         /* 自定义动画 */
@@ -77,15 +83,35 @@
                 transform: translateY(0px);
             }
         }
+        
+        @keyframes rotate {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
     </style>
     
     <!-- 导入中文字体 -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Ma+Shan+Zheng&display=swap" rel="stylesheet">
 </head>
 <body class="min-h-screen overflow-x-hidden">
+    <!-- 背景音乐 -->
+    <audio id="bgMusic" loop>
+        <source src="https://overmind1980.github.io/oeasy_ai_show/hj.mp3" type="audio/mpeg">
+        您的浏览器不支持音频元素。
+    </audio>
+    
+    <!-- 音乐控制按钮 -->
+    <button id="musicControl" class="fixed top-4 right-4 w-12 h-12 rounded-full bg-accent/80 text-primary flex items-center justify-center shadow-lg z-20 transition-all duration-300 hover:scale-110 active:scale-95">
+        <i class="fa fa-music text-xl animate-rotate"></i>
+    </button>
+    
     <!-- 固定背景图 -->
     <div class="fixed inset-0 z-0">
-        <img src="https://img.picui.cn/free/2025/06/13/684bcb18be562.png" alt="陈真背景图" class="w-full h-full object-cover">
+        <img src="https://img.picui.cn/free/2025/06/13/684bc9a9195b0.png" alt="陈真背景图" class="w-full h-full object-cover">
         <!-- 半透明叠加层增强文字可读性 -->
         <div class="absolute inset-0 bg-dark/60"></div>
     </div>
@@ -251,5 +277,58 @@
             <p class="mt-2">© 2025 精武门纪念馆</p>
         </footer>
     </main>
+    
+    <script>
+        // 音乐控制功能
+        document.addEventListener('DOMContentLoaded', function() {
+            const musicControl = document.getElementById('musicControl');
+            const bgMusic = document.getElementById('bgMusic');
+            const musicIcon = musicControl.querySelector('i');
+            
+            // 初始化音乐状态
+            let isPlaying = false;
+            
+            // 播放音乐函数
+            function playMusic() {
+                bgMusic.play().catch(error => {
+                    console.log('自动播放失败:', error);
+                    // 显示提示信息
+                    alert('由于浏览器限制，需要点击页面激活音乐播放权限');
+                });
+                musicIcon.classList.remove('pause-rotate');
+                isPlaying = true;
+            }
+            
+            // 暂停音乐函数
+            function pauseMusic() {
+                bgMusic.pause();
+                musicIcon.classList.add('pause-rotate');
+                isPlaying = false;
+            }
+            
+            // 点击按钮切换音乐状态
+            musicControl.addEventListener('click', function() {
+                if (isPlaying) {
+                    pauseMusic();
+                } else {
+                    playMusic();
+                }
+            });
+            
+            // 页面第一次点击时激活音乐播放
+            let firstClick = true;
+            document.addEventListener('click', function() {
+                if (firstClick) {
+                    firstClick = false;
+                    // 如果音乐已暂停，则不自动播放
+                    if (!isPlaying) {
+                        return;
+                    }
+                    playMusic();
+                }
+            }, { once: true });
+        });
+    </script>
 </body>
 </html>
+    
